@@ -7,7 +7,7 @@ int main() {
 
     nRF24L01P transmitter(D11, D12, D13, A3, D7);
     transmitter.powerUp();
-    transmitter.setRfFrequency(DEFAULT_NRF24L01P_RF_FREQUENCY + 16);
+    transmitter.setRfFrequency(DEFAULT_NRF24L01P_RF_FREQUENCY + 4 * 4);
     transmitter.setTxAddress(0xDEADBEEF, 8, 5);
     transmitter.setTransmitMode();
     transmitter.enable();
