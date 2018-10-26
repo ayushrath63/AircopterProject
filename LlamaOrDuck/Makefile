@@ -363,13 +363,15 @@ LD_SYS_LIBS :=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys -lmbed -
 ###############################################################################
 # Rules
 
-.PHONY: all lst size
+.PHONY: lst size
 
+RX: TARGET_TYPE = -DRECEIVE
+RX: $(PROJECT)_RX.bin $(PROJECT)_RX.hex size
 
-all: $(PROJECT).bin $(PROJECT).hex size
+TX: TARGET_TYPE = -DTRANSMIT
+TX: $(PROJECT)_TX.bin $(PROJECT)_TX.hex size
 
-
-.s.o:
+%.o: %.s
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Assemble: $(notdir $<)"
   
@@ -377,38 +379,49 @@ all: $(PROJECT).bin $(PROJECT).hex size
   
 
 
-.S.o:
+%.o: %.S
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Assemble: $(notdir $<)"
   
 	@$(AS) -c $(ASM_FLAGS) -o $@ $<
   
 
-.c.o:
+%.o: %.c
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Compile: $(notdir $<)"
 	@$(CC) $(C_FLAGS) $(INCLUDE_PATHS) -o $@ $<
 
-.cpp.o:
+%.o: %.cpp
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Compile: $(notdir $<)"
-	@$(CPP) $(CXX_FLAGS) $(INCLUDE_PATHS) -o $@ $<
+	@$(CPP) $(CXX_FLAGS) $(TARGET_TYPE) $(INCLUDE_PATHS) -o $@ $<
 
 $(PROJECT).link_script.ld: $(LINKER_SCRIPT)
 	@$(PREPROC) $< -o $@
 
 
 
-$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld 
+$(PROJECT)_RX.elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld 
+	+@echo "link: $(notdir $@)"
+	@$(LD) $(LD_FLAGS) -T $(filter-out %.o, $^) $(LIBRARY_PATHS) --output $@ $(filter %.o, $^) $(LIBRARIES) $(LD_SYS_LIBS)
+
+$(PROJECT)_TX.elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld
 	+@echo "link: $(notdir $@)"
 	@$(LD) $(LD_FLAGS) -T $(filter-out %.o, $^) $(LIBRARY_PATHS) --output $@ $(filter %.o, $^) $(LIBRARIES) $(LD_SYS_LIBS)
 
 
-$(PROJECT).bin: $(PROJECT).elf
+$(PROJECT)_TX.bin: $(PROJECT)_TX.elf
 	$(ELF2BIN) -O binary $< $@
 	+@echo "===== bin file ready to flash: $(OBJDIR)/$@ =====" 
 
-$(PROJECT).hex: $(PROJECT).elf
+$(PROJECT)_RX.bin: $(PROJECT)_RX.elf
+	$(ELF2BIN) -O binary $< $@
+	+@echo "===== bin file ready to flash: $(OBJDIR)/$@ =====" 
+
+$(PROJECT)_TX.hex: $(PROJECT)_TX.elf
+	$(ELF2BIN) -O ihex $< $@
+
+$(PROJECT)_RX.hex: $(PROJECT)_RX.elf
 	$(ELF2BIN) -O ihex $< $@
 
 
