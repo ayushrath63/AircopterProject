@@ -1,16 +1,26 @@
 
 #include "mbed.h"
 #include "nRF24L01P.h"
+#include "millis.h"
+#include <cstdio>
+#include <cstdlib>
 
 #define TRANSFER_SIZE 1
-
+#define RED 0x05
+#define GREEN 0x06
 #ifdef RECEIVE
 
 nRF24L01P my_nrf24l01p(PB_5, PB_4, PB_3, PA_4, PF_0);    // mosi, miso, sck, csn, ce, irq
-DigitalOut led1(D9);
-DigitalOut led2(A2);
 Serial printer(SERIAL_TX,SERIAL_RX);
+/*
+DigitalOut ledR(A5);
+DigitalOut ledG(A6);
+*/
 
+DigitalOut ledR(D9);
+DigitalOut ledG(A2);
+DigitalIn btnR(A6);
+DigitalIn btnG(A5);
 
 int main() {
 
@@ -28,18 +38,23 @@ int main() {
     my_nrf24l01p.enable();
     
     char buffer = 0;
-    
-    while (1) {
-        led1 = 1;
-        led2 = 0;
-        wait(1);
-        if(my_nrf24l01p.readable()){
+    millis_begin();
+    while (1)
+    {
+        if(buffer != 0)
+            printer.printf("%d\r\n", buffer);
+        if(my_nrf24l01p.readable())
+        {
             my_nrf24l01p.read(0, &buffer, 1);
-            if(buffer == 0x05){
-                led1 = 0;
-                led2 = 1;
-                printer.printf("%d", buffer);
-                wait(1);
+            if(buffer == RED)
+            {
+                ledR = 0;
+                ledG = 1;
+            }
+            else if(buffer == GREEN)
+            {
+                ledR = 1;
+                ledG = 0;
             }
         }
     }
@@ -53,10 +68,16 @@ int main() {
 #include "nRF24L01P.h"
 
 nRF24L01P my_nrf24l01p(PB_5, PB_4, PB_3, PA_4, PF_0);    // mosi, miso, sck, csn, ce, irq
-
+/*
+DigitalOut ledR(D9);
+DigitalOut ledG(A2);
+DigitalIn btnR(A6);
+DigitalIn btnG(A5);
+*/
+DigitalOut ledR(A5);
+DigitalOut ledG(A6);
 
 int main() {
-
     //Set up for Send
     my_nrf24l01p.powerUp();
     my_nrf24l01p.setRfFrequency(NRF24L01P_MIN_RF_FREQUENCY + 16);
@@ -70,10 +91,32 @@ int main() {
     my_nrf24l01p.setTransmitMode();
     my_nrf24l01p.enable();
 
-    char red = 0x05;
-    
-    while (1) {
-        my_nrf24l01p.write(0, &red, 1); 
+    char red = RED;
+    char green = GREEN;
+    srand(0xDEAD);
+    millis_begin();
+    int presstime = 2000;
+    while (1)
+    {
+            my_nrf24l01p.write(0, &red, 1);
+        /*
+        if(rand() & 1)
+        {
+            ledR = 1;
+            ledG = 0;
+        }
+        else
+        {
+            ledG = 1;
+            ledR = 0;
+        }
+        while(!btnR && !btnG);
+
+        while(!btnR && !btnG);
+        if(btnR == 1 && ledR == 1) my_nrf24l01p.write(0, &red, 1);
+        else if(btnG == 1 && ledG == 1) my_nrf24l01p.write(0, &green, 1);
+        wait(0.1);
+        */
     }
 }
 #endif
