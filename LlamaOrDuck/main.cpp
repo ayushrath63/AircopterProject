@@ -9,8 +9,8 @@
 #ifdef RECEIVE
 
 nRF24L01P my_nrf24l01p(PB_5, PB_4, PB_3, PA_4, PF_0);    // mosi, miso, sck, csn, ce, irq
-DigitalOut ledR(A5);
-DigitalOut ledG(A6);
+DigitalOut ledR(A6);
+DigitalOut ledG(A4);
 Serial printer(SERIAL_TX,SERIAL_RX);
 
 
@@ -41,7 +41,7 @@ int main() {
                 ledR = 1;
                 printer.printf("%d", buffer);
                 wait(1);
-            } else if(buffer == 0x05){
+            } else if(buffer == 0x06){
                 ledG = 1;
                 printer.printf("%d", buffer);
                 wait(1);
@@ -58,7 +58,6 @@ int main() {
 #include "nRF24L01P.h"
 //
 nRF24L01P my_nrf24l01p(PB_5, PB_4, PB_3, PA_4, PF_0);    // mosi, miso, sck, csn, ce, irq
-
 
 int main() {
 
@@ -77,9 +76,9 @@ int main() {
 
     char red = RED;
     char green = GREEN;
-    
+    srand(0xBEEF);
     while (1) {
-        if(rand() % 2) my_nrf24l01p.write(0, &red, 1); 
+        if(rand() & 1) my_nrf24l01p.write(0, &red, 1); 
         else my_nrf24l01p.write(0, &green, 1); 
     }
 }
