@@ -31,20 +31,50 @@ int main() {
     
     char buffer = 0;
     
+    char red = RED;
+    char green = GREEN;
+    srand(0xBEEF);
+    ledR = 0;
+    ledG = 0;
+    millis_begin();
+    int game_time = 2000;
+    int buttonVal;
     while (1) {
-        ledR = 0;
-        ledG = 0;
-        wait(1);
-        if(my_nrf24l01p.readable()){
-            my_nrf24l01p.read(0, &buffer, 1);
-            if(buffer == 0x05){
-                ledR = 1;
-                printer.printf("%d", buffer);
-                wait(1);
-            } else if(buffer == 0x06){
-                ledG = 1;
-                printer.printf("%d", buffer);
-                wait(1);
+        ledR = ledG = 0;
+        wait(0.5);
+        unsigned long t_start = millis();
+        if(rand() & 1) 
+        {
+            ledR = 1;
+            buttonVal = RED;
+        }
+        else 
+        {
+            ledG = 1;
+            buttonVal = GREEN;
+        }
+        while(millis() - t_start < game_time)
+        {
+            if(my_nrf24l01p.readable()){
+                my_nrf24l01p.read(0, &buffer, 1);
+                if(buffer == buttonVal)
+                {
+                    game_time = game_time == 500 ? 500 : game_time - 250;
+                    printer.printf("%d\r\n", buffer);
+                    break;
+                }
+            }
+        }
+        if(buffer != buttonVal)
+        {
+            buffer = 0;
+            game_time = 2000;
+            ledG = 0;
+            ledG = 0;
+            for(int i = 0; i < 6; i++)
+            {
+                ledR = !ledR;
+                wait(0.1);
             }
         }
     }
@@ -58,6 +88,10 @@ int main() {
 #include "nRF24L01P.h"
 //
 nRF24L01P my_nrf24l01p(PB_5, PB_4, PB_3, PA_4, PF_0);    // mosi, miso, sck, csn, ce, irq
+DigitalIn btnR(A6);
+DigitalIn btnG(A5);
+DigitalOut ledG(A2);
+DigitalOut ledR(D9);
 
 int main() {
 
@@ -76,10 +110,23 @@ int main() {
 
     char red = RED;
     char green = GREEN;
-    srand(0xBEEF);
+
     while (1) {
-        if(rand() & 1) my_nrf24l01p.write(0, &red, 1); 
-        else my_nrf24l01p.write(0, &green, 1); 
+        if(btnR)
+        {
+            my_nrf24l01p.write(0, &red, 1); 
+            ledR = 1;
+            wait(0.2);
+        }
+        else if(btnG)
+        {
+            my_nrf24l01p.write(0, &green, 1); 
+            ledG = 1;
+            wait(0.2);
+        }
+        ledR = 0;
+        ledG = 0;
     }
+
 }
 #endif
