@@ -6,6 +6,7 @@
 #define TRANSFER_SIZE 1
 #define RED 0x05
 #define GREEN 0x06
+
 #ifdef RECEIVE
 
 nRF24L01P my_nrf24l01p(PB_5, PB_4, PB_3, PA_4, PF_0);    // mosi, miso, sck, csn, ce, irq
@@ -81,12 +82,12 @@ int main() {
 }
 
 #endif
-//
+
 #ifdef TRANSMIT
 
 #include "mbed.h"
 #include "nRF24L01P.h"
-//
+
 nRF24L01P my_nrf24l01p(PB_5, PB_4, PB_3, PA_4, PF_0);    // mosi, miso, sck, csn, ce, irq
 DigitalIn btnR(A6);
 DigitalIn btnG(A5);
