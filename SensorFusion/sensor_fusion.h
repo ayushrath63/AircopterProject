@@ -14,16 +14,23 @@
  * You will need to look at the register map.
  */
  
-#define SDA                             //the pin used for SDA                            
-#define SCL                             //the pin used for SCL                    
+#define SDA                      D4     //the pin used for SDA                            
+#define SCL                      D5     //the pin used for SCL                    
 #define ADDRESS                  0xD1   //the slave address of the IMU
-#define INT_STATUS                      //the interrupt status register 
-#define PWR_MGMT_1                      //power management 1
+#define INT_STATUS               0x3A   //the interrupt status register 
+#define PWR_MGMT_1               0x6B   //power management 1
 #define CONFIG                   0x1A   //the IMU config register
-#define GYRO_CONFIG                     //the gyroscope config register    
-#define ACCEL_CONFIG                    //the accelerometer config register        
-#define GYRO_X                          //the register that stores the first bit of the gyroscope x value          
-#define ACCEL_X                         //the register that stores the first bit of the accelerometer x value
+#define GYRO_CONFIG              0x1B   //the gyroscope config register    
+#define ACCEL_CONFIG             0x1C   //the accelerometer config register        
+#define GYRO_X                   0x43   //the register that stores the first bit of the gyroscope x value          
+#define ACCEL_X                  0x3B   //the register that stores the first bit of the accelerometer x value
+
+#define MPU6050_SLEEP_MASK       0x40   //sleep bit for PWR_MGMT_1 register
+#define ACCEL_CONFIG_AFS_MASK    0x18   //AFS_SEL bits for ACCEL_CONFIG register
+#define GYRO_CONFIG_FS_MASK      0x18   //FS_SEL bits for GYRO_CONFIG register
+#define ACCEL_CONFIG_ST_MASK     0xE0   //self test bits for ACCEL_CONFIG register
+#define GYRO_CONFIG_ST_MASK      0xE0   //self test bits for GYRO_CONFIG register
+#define MPU6050_DLPF_CFG_MASK    0x07   //digital low pass filter bits for config register
 
 class MPU6050 {
 
@@ -74,7 +81,7 @@ private:
      *
      * Returns true upon success, and false upon failure.
      */
-    bool write_reg(int addr, int reg, char buf);
+    bool write_reg(char addr, char reg, char buf);
 
     /** 
      * Reads data from a specific address
