@@ -1,25 +1,17 @@
 
 #include "mbed.h"
+#include "sensor_fusion.h"
 
-PwmOut out(D9);
-
-#define MAX_SPEED 0.3f
+Serial pc(USBTX, USBRX);
 
 int main() {
 
+    MPU6050 imu(SDA, SCL);
+    imu.start();
+
     while(1)
     {
-        while(out < MAX_SPEED)
-        {
-            out = out + 0.05f;
-            wait_ms(200);
-        }
-
-        while(out > 0.0f)
-        {
-            out = out - 0.05f;
-            wait_ms(200);
-        }
+        pc.printf("%d\r\n", imu.data_ready());
     }
     
     return 0;

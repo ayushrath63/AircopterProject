@@ -15,9 +15,12 @@
  */
  
 #define SDA                      D4     //the pin used for SDA                            
-#define SCL                      D5     //the pin used for SCL                    
-#define ADDRESS                  0xD1   //the slave address of the IMU
-#define INT_STATUS               0x3A   //the interrupt status register 
+#define SCL                      D5     //the pin used for SCL
+
+//Should be 0x68? was 0xD1       
+#define ADDRESS                  0x68   //the slave address of the IMU 
+#define INT_STATUS               0x3A   //the interrupt status register
+#define INT_ENABLE               0x38   //the interrupt status registe 
 #define PWR_MGMT_1               0x6B   //power management 1
 #define CONFIG                   0x1A   //the IMU config register
 #define GYRO_CONFIG              0x1B   //the gyroscope config register    
@@ -31,6 +34,9 @@
 #define ACCEL_CONFIG_ST_MASK     0xE0   //self test bits for ACCEL_CONFIG register
 #define GYRO_CONFIG_ST_MASK      0xE0   //self test bits for GYRO_CONFIG register
 #define MPU6050_DLPF_CFG_MASK    0x07   //digital low pass filter bits for config register
+#define INT_STATUS_DATA_RDY      0x01   //data ready bit of INT_STATUS register
+#define INT_ENABLE_DATA_RDY      0x01   //data ready bit of INT_ENABLE register
+
 
 class MPU6050 {
 
