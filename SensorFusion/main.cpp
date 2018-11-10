@@ -8,10 +8,13 @@ int main() {
 
     MPU6050 imu(SDA, SCL);
     imu.start();
-
+    
+    float gx,gy,gz,ax,ay,az;
     while(1)
     {
-        pc.printf("%d\r\n", imu.data_ready());
+        while(!imu.data_ready()){}
+        imu.read_raw(&gx, &gy, &gz, &ax, &ay, &az);
+        //pc.printf("w = (%f,%f,%f)\r\n a= (%f,%f,%f)", gx,gy,gz,ax,ay,az);
     }
     
     return 0;

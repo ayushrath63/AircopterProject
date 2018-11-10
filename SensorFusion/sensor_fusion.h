@@ -16,17 +16,20 @@
  
 #define SDA                      D4     //the pin used for SDA                            
 #define SCL                      D5     //the pin used for SCL
-
-//Should be 0x68? was 0xD1       
-#define ADDRESS                  0x68   //the slave address of the IMU 
+     
+#define ADDRESS                  0xD1   //the slave address of the IMU 
 #define INT_STATUS               0x3A   //the interrupt status register
 #define INT_ENABLE               0x38   //the interrupt status registe 
 #define PWR_MGMT_1               0x6B   //power management 1
 #define CONFIG                   0x1A   //the IMU config register
 #define GYRO_CONFIG              0x1B   //the gyroscope config register    
 #define ACCEL_CONFIG             0x1C   //the accelerometer config register        
-#define GYRO_X                   0x43   //the register that stores the first bit of the gyroscope x value          
+#define GYRO_X                   0x43   //the register that stores the first bit of the gyroscope x value 
+#define GYRO_Y                   0x45   //the register that stores the first bit of the gyroscope x value 
+#define GYRO_Z                   0x47   //the register that stores the first bit of the gyroscope x value          
 #define ACCEL_X                  0x3B   //the register that stores the first bit of the accelerometer x value
+#define ACCEL_Y                  0x3D   //the register that stores the first bit of the accelerometer x value
+#define ACCEL_Z                  0x3F   //the register that stores the first bit of the accelerometer x value
 
 #define MPU6050_SLEEP_MASK       0x40   //sleep bit for PWR_MGMT_1 register
 #define ACCEL_CONFIG_AFS_MASK    0x18   //AFS_SEL bits for ACCEL_CONFIG register
@@ -74,7 +77,7 @@ public:
      */
     bool data_ready(void);
 
-private:
+//private:
 
     I2C i2c_object; //instance of an i2c class
 
