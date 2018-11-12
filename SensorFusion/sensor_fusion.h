@@ -40,6 +40,14 @@
 #define INT_STATUS_DATA_RDY      0x01   //data ready bit of INT_STATUS register
 #define INT_ENABLE_DATA_RDY      0x01   //data ready bit of INT_ENABLE register
 
+#define I2C_ACK                  0x00
+
+#define GYRO_BIAS_X              -10.6696
+#define GYRO_BIAS_Y              -0.40652
+#define GYRO_BIAS_Z              -12.5478
+#define ACCEL_BIAS_X             -8903.33
+#define ACCEL_BIAS_Y             4401.27
+#define ACCEL_BIAS_Z             -1408.1
 
 class MPU6050 {
 
@@ -77,7 +85,7 @@ public:
      */
     bool data_ready(void);
 
-//private:
+private:
 
     I2C i2c_object; //instance of an i2c class
 

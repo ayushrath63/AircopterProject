@@ -65,31 +65,15 @@ bool MPU6050::read_raw(float *gx, float *gy, float *gz, float *ax, float *ay, fl
 
     char data[12];
     
-    read_reg(ADDRESS, GYRO_X, data, 1);
-    read_reg(ADDRESS, GYRO_X+1, data+1, 1);
+    read_reg(ADDRESS, GYRO_X, data, 6);
+    read_reg(ADDRESS, ACCEL_X, data+6, 6);
 
-    read_reg(ADDRESS, GYRO_Y, data+2, 1);
-    read_reg(ADDRESS, GYRO_Y+1, data+3, 1);
-
-    read_reg(ADDRESS, GYRO_Z, data+4, 1);
-    read_reg(ADDRESS, GYRO_Z+1, data+5, 1);
-
-    read_reg(ADDRESS, ACCEL_X, data+6, 1);
-    read_reg(ADDRESS, ACCEL_X+1, data+7, 1);
-
-    read_reg(ADDRESS, ACCEL_Y, data+8, 1);
-    read_reg(ADDRESS, ACCEL_Y+1, data+9, 1);
-
-    read_reg(ADDRESS, ACCEL_Z, data+10, 1);
-    read_reg(ADDRESS, ACCEL_Z+1, data+11, 1);
-    
-
-    *gx = (float)( (int)(data[0] << 8) | (int)(data[1]) );
-    *gy = (float)( (int)(data[2] << 8) | (int)(data[3]) );
-    *gz = (float)( (int)(data[4] << 8) | (int)(data[5]) );
-    *ax = (float)( (int)(data[6] << 8) | (int)(data[7]) );
-    *ay = (float)( (int)(data[8] << 8) | (int)(data[9]) );
-    *az = (float)( (int)(data[10] << 8) | (int)(data[11]) );
+    *gx = (float)((short)((data[0] << 8) | (data[1]))) - GYRO_BIAS_X;
+    *gy = (float)((short)((data[2] << 8) | (data[3]))) - GYRO_BIAS_Y;
+    *gz = (float)((short)((data[4] << 8) | (data[5]))) - GYRO_BIAS_Z;
+    *ax = -1.0f*((float)((short)((data[6] << 8) | (data[7]))) - ACCEL_BIAS_X);
+    *ay = -1.0f*((float)((short)((data[8] << 8) | (data[9]))) - ACCEL_BIAS_Y);
+    *az = -1.0f*((float)((short)((data[10] << 8) | (data[11]))) - ACCEL_BIAS_Z);
 
     return true;
 }
@@ -119,9 +103,7 @@ bool MPU6050::write_reg(char addr, char reg, char buf) {
     /** YOUR CODE GOES BELOW */ 
 
     char command[2] = {reg, buf};
-
-    i2c_object.write(addr, command, 2);
-    return true;
+    return (i2c_object.write(addr, command, 2) == I2C_ACK);
 }
  
 bool MPU6050::read_reg(char addr, char reg, char *buf, int length) {
@@ -133,11 +115,8 @@ bool MPU6050::read_reg(char addr, char reg, char *buf, int length) {
      */
 
     /** YOUR CODE GOES BELOW */
+    if(i2c_object.write(addr, &reg, 1, true) != I2C_ACK) return false;
+    if(i2c_object.read(addr, buf, length) != I2C_ACK) return false;
 
-    i2c_object.write(addr, &reg, 1);
-    for(int i = 0; i < length; i++)
-    {
-        i2c_object.read(addr, buf+i, 1);
-    }
     return true;
 }

@@ -1,20 +1,28 @@
 
 #include "mbed.h"
+#include "quaternion.h"
 #include "sensor_fusion.h"
 
 Serial pc(USBTX, USBRX);
+
+#define NUM_SAMPLES 200
 
 int main() {
 
     MPU6050 imu(SDA, SCL);
     imu.start();
-    
-    float gx,gy,gz,ax,ay,az;
+    char buf[1] = { 0x00 };
+    float gx, gy, gz, ax, ay, az;
     while(1)
     {
-        while(!imu.data_ready()){}
-        imu.read_raw(&gx, &gy, &gz, &ax, &ay, &az);
-        //pc.printf("w = (%f,%f,%f)\r\n a= (%f,%f,%f)", gx,gy,gz,ax,ay,az);
+        for(int i = 0; i < NUM_SAMPLES; i++)
+        {
+            while(!imu.data_ready());
+            imu.read_raw(&gx, &gy, &gz, &ax, &ay, &az);
+            vector accel_vec(ax,ay,az);
+            vector_normalize(&accel_vec, &accel_vec);
+            pc.printf("%f,%f,%f\r\n", accel_vec.x,accel_vec.y,accel_vec.z);
+        }
     }
     
     return 0;

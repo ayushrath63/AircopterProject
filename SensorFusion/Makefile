@@ -39,7 +39,7 @@ VPATH = ..
 ###############################################################################
 # Project settings
 
-PROJECT := MotorControl
+PROJECT := SensorFusion
 
 
 # Project settings

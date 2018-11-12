@@ -6,6 +6,8 @@
 #define __QUATERNION_H
 
 struct vector {
+  vector() : x(0.0f), y(0.0f), z(0.0f){}
+  vector(float in_x, float in_y, float in_z) : x(in_x), y(in_y), z(in_z){}
   float x;
   float y;
   float z;
