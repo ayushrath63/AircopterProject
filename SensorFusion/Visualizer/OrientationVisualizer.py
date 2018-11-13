@@ -28,7 +28,7 @@ def animate(i):
     ax.clear()
     ax.quiver(X, Y, Z, Vector[0],Vector[1],Vector[2], length = 0.05, normalize=True,)
 
-ani = animation.FuncAnimation(fig, animate, interval=1000)
+ani = animation.FuncAnimation(fig, animate, interval=100)
 plt.show()
 
 exit()
