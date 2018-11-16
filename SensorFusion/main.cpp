@@ -7,10 +7,21 @@ Serial pc(USBTX, USBRX);
 
 #define NUM_SAMPLES 200
 
+
+typedef union {
+    char s[4];
+    float f;    
+} floatUnion;
+
+floatUnion x,y,z;
+
+
+const float alpha = 0.6;
+
 int main() {
     
-    float initial = 0;
-    float final = 0;
+    float initialTime = 0;
+    float finalTime = 0;
     vector orientation(0,0,1);
     vector filtered(0,0,1);
 
@@ -19,11 +30,9 @@ int main() {
     char buf[1] = { 0x00 };
     float gx, gy, gz, ax, ay, az;
     millis_begin();
-    initial = millis();
+    initialTime = millis();
     while(1)
-    {
-        for(int i = 0; i < NUM_SAMPLES; i++)
-        {         
+    {  
             while(!imu.data_ready());
             imu.read_raw(&gx, &gy, &gz, &ax, &ay, &az);
             vector accel_vec(ax,ay,az);
@@ -36,9 +45,9 @@ int main() {
             
             float mag = vector_normalize(&gyro_vec, &gyro_vec);
             
-            final = millis();
-            float time = (final - initial)/1000;
-            initial = final;
+            finalTime = millis();
+            float time = (finalTime - initialTime)/1000;
+            initialTime = finalTime;
             
             quaternion q;
             
@@ -46,10 +55,24 @@ int main() {
             
             quaternion_rotate(&orientation, &q, &orientation);
             
-            pc.printf("Gyro: %f,%f,%f\r\n", orientation.x,orientation.y,orientation.z);
-            pc.printf("Accl: %f,%f,%f\r\n", accel_vec.x,accel_vec.y,accel_vec.z);
-
-        }
+            vector filtered(0,0,1);
+            vector tmp_accel(0,0,1);
+            vector tmp_gyro(0,0,1);
+            
+            vector_multiply(&accel_vec, alpha, &tmp_accel);
+            vector_multiply(&orientation, (1.0f-alpha), &tmp_gyro);
+            
+            vector tmp_nonormal(0,0,1);
+            vector_add(&tmp_accel, &tmp_gyro, &tmp_nonormal);
+            vector_normalize(&tmp_nonormal, &orientation);
+            
+            x.f = orientation.x;
+            y.f = orientation.y;
+            z.f = orientation.z;
+            
+            //pc.printf("%c%c%c%c%c%c%c%c%c%c%c%c\r\n", x.s[0], x.s[1],x.s[2],x.s[3], y.s[0], y.s[1],y.s[2],y.s[3], z.s[0], z.s[1],z.s[2],z.s[3]);
+            pc.printf("%c%c%c%c%c%c%c%c%c%c%c%c\r\n", x.s[3], x.s[2],x.s[1],x.s[0], y.s[3], y.s[2],y.s[1],y.s[0], z.s[3], z.s[2],z.s[1],z.s[0]);
+            //pc.printf("%f %f %f\r\n", orientation.x,orientation.y,orientation.z);
     }
     
     return 0;
