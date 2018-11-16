@@ -68,9 +68,9 @@ bool MPU6050::read_raw(float *gx, float *gy, float *gz, float *ax, float *ay, fl
     read_reg(ADDRESS, GYRO_X, data, 6);
     read_reg(ADDRESS, ACCEL_X, data+6, 6);
 
-    *gx = (float)((short)((data[0] << 8) | (data[1]))) - GYRO_BIAS_X;
-    *gy = (float)((short)((data[2] << 8) | (data[3]))) - GYRO_BIAS_Y;
-    *gz = (float)((short)((data[4] << 8) | (data[5]))) - GYRO_BIAS_Z;
+    *gx = ((float)((short)((data[0] << 8) | (data[1]))) - GYRO_BIAS_X)/16.4;
+    *gy = ((float)((short)((data[2] << 8) | (data[3]))) - GYRO_BIAS_Y)/16.4;
+    *gz = ((float)((short)((data[4] << 8) | (data[5]))) - GYRO_BIAS_Z)/16.4;
     *ax = -1.0f*((float)((short)((data[6] << 8) | (data[7]))) - ACCEL_BIAS_X);
     *ay = -1.0f*((float)((short)((data[8] << 8) | (data[9]))) - ACCEL_BIAS_Y);
     *az = -1.0f*((float)((short)((data[10] << 8) | (data[11]))) - ACCEL_BIAS_Z);

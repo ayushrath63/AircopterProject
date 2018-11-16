@@ -45,8 +45,8 @@
 #define GYRO_BIAS_X              -10.6696
 #define GYRO_BIAS_Y              -0.40652
 #define GYRO_BIAS_Z              -12.5478
-#define ACCEL_BIAS_X             -8903.33
-#define ACCEL_BIAS_Y             4401.27
+#define ACCEL_BIAS_X             -9143.33 //-8903.33
+#define ACCEL_BIAS_Y             4811.27 //4401.27
 #define ACCEL_BIAS_Z             -1408.1
 
 class MPU6050 {
