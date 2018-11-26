@@ -9,7 +9,7 @@ from mpl_toolkits.mplot3d import axes3d, Axes3D
 
 
 
-ser = serial.Serial('\\\\.\\COM10', timeout = None)
+ser = serial.Serial('\\\\.\\COM4', timeout = None)
 
 fig = plt.figure()
 ax = Axes3D(fig) #<-- Note the difference from your original code...
@@ -26,7 +26,7 @@ def animate(i):
     Vector = np.array([U,V,W]) /np.linalg.norm([U,V,W], ord=2);
     print(Vector)
     ax.clear()
-    ax.quiver(X, Y, Z, Vector[0],Vector[1],Vector[2], length = 0.05, normalize=True,)
+    ax.quiver(X, Y, Z, Vector[0],Vector[1],Vector[2], length = 0.05, normalize=True)
 
 ani = animation.FuncAnimation(fig, animate, interval=100)
 plt.show()

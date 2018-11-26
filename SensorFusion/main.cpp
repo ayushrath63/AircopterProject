@@ -3,7 +3,7 @@
 #include "millis.h"
 #include "sensor_fusion.h"
 
-Serial pc(USBTX, USBRX);
+//Serial pc(USBTX, USBRX);
 
 #define NUM_SAMPLES 200
 
@@ -23,7 +23,6 @@ int main() {
     float initialTime = 0;
     float finalTime = 0;
     vector orientation(0,0,1);
-    vector filtered(0,0,1);
 
     MPU6050 imu(SDA, SCL);
     imu.start();
@@ -37,7 +36,6 @@ int main() {
             imu.read_raw(&gx, &gy, &gz, &ax, &ay, &az);
             vector accel_vec(ax,ay,az);
             vector_normalize(&accel_vec, &accel_vec);
-            
             
             vector gyro_vec(gx,gy,gz);
             //pc.printf("New turn\r\n");
@@ -55,7 +53,6 @@ int main() {
             
             quaternion_rotate(&orientation, &q, &orientation);
             
-            vector filtered(0,0,1);
             vector tmp_accel(0,0,1);
             vector tmp_gyro(0,0,1);
             
@@ -66,12 +63,12 @@ int main() {
             vector_add(&tmp_accel, &tmp_gyro, &tmp_nonormal);
             vector_normalize(&tmp_nonormal, &orientation);
             
-            x.f = orientation.x;
-            y.f = orientation.y;
-            z.f = orientation.z;
+            x.f = accel_vec.x;
+            y.f = accel_vec.y;
+            z.f = accel_vec.z;
             
             //pc.printf("%c%c%c%c%c%c%c%c%c%c%c%c\r\n", x.s[0], x.s[1],x.s[2],x.s[3], y.s[0], y.s[1],y.s[2],y.s[3], z.s[0], z.s[1],z.s[2],z.s[3]);
-            pc.printf("%c%c%c%c%c%c%c%c%c%c%c%c\r\n", x.s[3], x.s[2],x.s[1],x.s[0], y.s[3], y.s[2],y.s[1],y.s[0], z.s[3], z.s[2],z.s[1],z.s[0]);
+            //pc.printf("%c%c%c%c%c%c%c%c%c%c%c%c\r\n", x.s[0], x.s[1],x.s[2],x.s[3], y.s[0], y.s[1],y.s[2],y.s[3], z.s[0], z.s[1],z.s[2],z.s[3]);
             //pc.printf("%f %f %f\r\n", orientation.x,orientation.y,orientation.z);
     }
     
