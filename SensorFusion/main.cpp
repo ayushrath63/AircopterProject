@@ -16,7 +16,7 @@ typedef union {
 floatUnion x,y,z;
 
 
-const float alpha = 0.6;
+const float alpha = 0.8;
 
 int main() {
     
@@ -60,16 +60,21 @@ int main() {
             vector_multiply(&orientation, (1.0f-alpha), &tmp_gyro);
             
             vector tmp_nonormal(0,0,1);
+            vector combo_vec(0,0,1);
             vector_add(&tmp_accel, &tmp_gyro, &tmp_nonormal);
-            vector_normalize(&tmp_nonormal, &orientation);
+            vector_normalize(&tmp_nonormal, &combo_vec);
             
-            x.f = accel_vec.x;
-            y.f = accel_vec.y;
-            z.f = accel_vec.z;
+            x.f = combo_vec.x;
+            y.f = combo_vec.y;
+            z.f = combo_vec.z;
             
             //pc.printf("%c%c%c%c%c%c%c%c%c%c%c%c\r\n", x.s[0], x.s[1],x.s[2],x.s[3], y.s[0], y.s[1],y.s[2],y.s[3], z.s[0], z.s[1],z.s[2],z.s[3]);
-            //pc.printf("%c%c%c%c%c%c%c%c%c%c%c%c\r\n", x.s[0], x.s[1],x.s[2],x.s[3], y.s[0], y.s[1],y.s[2],y.s[3], z.s[0], z.s[1],z.s[2],z.s[3]);
-            //pc.printf("%f %f %f\r\n", orientation.x,orientation.y,orientation.z);
+            //pc.printf("%c%c%c%c%c%c%c%c%c%c%c%c\r\n", x.s[3], x.s[2],x.s[1],x.s[0], y.s[3], y.s[2],y.s[1],y.s[0], z.s[3], z.s[2],z.s[1],z.s[0]);
+            pc.printf("Accl: %f %f %f ", accel_vec.x,accel_vec.y,accel_vec.z);
+            pc.printf("Gyro: %f %f %f ", orientation.x,orientation.y,orientation.z);
+            pc.printf("Cmbo: %f %f %f\r\n", combo_vec.x,combo_vec.y,combo_vec.z);
+            //wait(0.1);
+
     }
     
     return 0;
