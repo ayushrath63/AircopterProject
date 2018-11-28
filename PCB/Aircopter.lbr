@@ -163,7 +163,7 @@
 <symbols>
 <symbol name="TPS63001DRCR_A">
 <pin name="FB" x="22.86" y="2.54" direction="pas" rot="R180"/>
-<pin name="PS/SYNC" x="-17.78" y="-10.16" direction="pas"/>
+<pin name="PS/SYNC" x="-17.78" y="-7.62" direction="pas"/>
 <pin name="VINA" x="-17.78" y="5.08" direction="pas"/>
 <pin name="L2" x="-17.78" y="-2.54" direction="pas"/>
 <pin name="L1" x="-17.78" y="0" direction="pas"/>
@@ -178,8 +178,8 @@
 <text x="-5.08" y="10.16" size="1.27" layer="96">&gt;Supplier Part Number 1</text>
 <text x="-1.27" y="1.27" size="1.27" layer="95">&gt;NAME</text>
 <text x="-1.27" y="-3.81" size="1.27" layer="96">&gt;VALUE</text>
-<pin name="EN" x="-17.78" y="-7.62"/>
-<pin name="PAD/PGND" x="22.86" y="-10.16" rot="R180"/>
+<pin name="EN" x="-17.78" y="-10.16"/>
+<pin name="EPAD/PGND" x="22.86" y="-10.16" rot="R180"/>
 </symbol>
 <symbol name="DSC6001CI1A-008.0000T_A">
 <pin name="VDD" x="-17.78" y="-2.54" direction="pas"/>
@@ -283,15 +283,17 @@
 <devices>
 <device name="TPS63001DRCR_VSON10" package="VSON10">
 <connects>
-<connect gate="A" pin="FB" pad="EPAD"/>
-<connect gate="A" pin="GND" pad="4"/>
-<connect gate="A" pin="L1" pad="5"/>
-<connect gate="A" pin="L2" pad="6"/>
-<connect gate="A" pin="PGND" pad="1"/>
-<connect gate="A" pin="PS/SYNC" pad="8"/>
-<connect gate="A" pin="VIN" pad="3"/>
-<connect gate="A" pin="VINA" pad="7"/>
-<connect gate="A" pin="VOUT" pad="2"/>
+<connect gate="A" pin="EN" pad="6"/>
+<connect gate="A" pin="EPAD/PGND" pad="EPAD"/>
+<connect gate="A" pin="FB" pad="10"/>
+<connect gate="A" pin="GND" pad="9"/>
+<connect gate="A" pin="L1" pad="4"/>
+<connect gate="A" pin="L2" pad="2"/>
+<connect gate="A" pin="PGND" pad="3"/>
+<connect gate="A" pin="PS/SYNC" pad="7"/>
+<connect gate="A" pin="VIN" pad="5"/>
+<connect gate="A" pin="VINA" pad="8"/>
+<connect gate="A" pin="VOUT" pad="1"/>
 </connects>
 <technologies>
 <technology name="">
